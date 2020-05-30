@@ -25,4 +25,8 @@
         <item name="android:textColor">#D13F57</item>
     </style>
 
+    <style name="ColoredButton" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorButtonNormal">@drawable/btn_color</item>
+    </style>
+
 </resources>

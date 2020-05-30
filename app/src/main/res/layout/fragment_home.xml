@@ -3,11 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".HomeFragment" >
+        android:orientation="vertical"
+        tools:context=".HomeFragment"
+        android:layout_height="wrap_content">
 
         <!-- TODO: Update blank fragment layout -->
         <View
@@ -19,192 +20,37 @@
             android:id="@+id/add_poker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
             android:layout_marginRight="34dp"
             android:layout_marginTop="28dp"
             android:text="@string/add_poker"
             android:textAppearance="@style/label_text_style"
             android:textColor="@color/colorLightBlue"
-            />
+            android:layout_marginEnd="34dp"
+            android:onClick="onClick"
+            android:clickable="true" />
 
         <TextView
             android:id="@+id/input_poker_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="21dp"
-            android:layout_marginTop="68dp"
+            android:layout_marginTop="28dp"
             android:text="@string/input_title"
             android:textAppearance="@style/title_style"
-            android:textColor="@color/colorBlack" />
+            android:textColor="@color/colorBlack"
+            android:layout_marginStart="21dp" />
 
-        <TextView
-            android:layout_below="@+id/input_poker_title"
-            android:id="@+id/input_poker_1_title"
-            android:layout_marginTop="30dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="@string/poker_value_1"
-            android:textAppearance="@style/label_text_style"
-            android:textColor="@color/colorBlack" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_below="@+id/input_poker_1_title"
-            android:id="@+id/input_poker_1"
-            android:layout_height="48dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="12dp"
-            android:hint="@string/poker_hint"
-            android:textAppearance="@style/hint_text_style"
-            android:background="@drawable/border"/>
-
-        <TextView
-            android:layout_below="@+id/input_poker_1"
-            android:id="@+id/poker_1_error_msg"
+        <LinearLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="6dp"
-            android:textAppearance="@style/error_text_style"/>
-
-        <TextView
-            android:layout_below="@+id/poker_1_error_msg"
-            android:id="@+id/input_poker_2_title"
-            android:layout_marginTop="6dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="@string/poker_value_2"
-            android:textAppearance="@style/label_text_style"
-            android:textColor="@color/colorBlack" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_below="@+id/input_poker_2_title"
-            android:id="@+id/input_poker_2"
-            android:layout_height="48dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="12dp"
-            android:hint="@string/poker_hint"
-            android:textAppearance="@style/hint_text_style"
-            android:background="@drawable/border"/>
-
-        <TextView
-            android:layout_below="@+id/input_poker_2"
-            android:id="@+id/poker_2_error_msg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="6dp"
-            android:textAppearance="@style/error_text_style" />
-
-        <TextView
-            android:layout_below="@+id/poker_2_error_msg"
-            android:id="@+id/input_poker_3_title"
-            android:layout_marginTop="6dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="@string/poker_value_3"
-            android:textAppearance="@style/label_text_style"
-            android:textColor="@color/colorBlack" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_below="@+id/input_poker_3_title"
-            android:id="@+id/input_poker_3"
-            android:layout_height="48dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="12dp"
-            android:hint="@string/poker_hint"
-            android:textAppearance="@style/hint_text_style"
-            android:background="@drawable/border"/>
-
-        <TextView
-            android:layout_below="@+id/input_poker_3"
-            android:id="@+id/poker_3_error_msg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="6dp"
-            android:textAppearance="@style/error_text_style" />
-
-        <TextView
-            android:layout_below="@+id/poker_3_error_msg"
-            android:id="@+id/input_poker_4_title"
-            android:layout_marginTop="6dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="@string/poker_value_4"
-            android:textAppearance="@style/label_text_style"
-            android:textColor="@color/colorBlack" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_below="@+id/input_poker_4_title"
-            android:id="@+id/input_poker_4"
-            android:layout_height="48dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="12dp"
-            android:hint="@string/poker_hint"
-            android:textAppearance="@style/hint_text_style"
-            android:background="@drawable/border"/>
-
-        <TextView
-            android:layout_below="@+id/input_poker_4"
-            android:id="@+id/poker_4_error_msg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="6dp"
-            android:textAppearance="@style/error_text_style" />
-
-        <TextView
-            android:layout_below="@+id/poker_4_error_msg"
-            android:id="@+id/input_poker_5_title"
-            android:layout_marginTop="6dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="@string/poker_value_5"
-            android:textAppearance="@style/label_text_style"
-            android:textColor="@color/colorBlack" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_below="@+id/input_poker_5_title"
-            android:id="@+id/input_poker_5"
-            android:layout_height="48dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="12dp"
-            android:hint="@string/poker_hint"
-            android:textAppearance="@style/hint_text_style"
-            android:background="@drawable/border"/>
-
-        <TextView
-            android:layout_below="@+id/input_poker_5"
-            android:id="@+id/poker_5_error_msg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="6dp"
-            android:textAppearance="@style/error_text_style" />
+            android:orientation="vertical" >
+        </LinearLayout>
 
         <Button
-            android:id="@+id/button"
-            android:layout_below="@+id/poker_5_error_msg"
+            android:id="@+id/button_result"
+            android:layout_below="@+id/container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="96dp"
@@ -212,5 +58,6 @@
             android:textAppearance="@style/label_text_style"
             android:text="@string/result" />
 
-    </RelativeLayout>
+
+    </LinearLayout>
 </ScrollView>
