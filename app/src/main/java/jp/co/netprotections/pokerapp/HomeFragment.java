@@ -1,5 +1,7 @@
 package jp.co.netprotections.pokerapp;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -9,6 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +22,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -46,6 +60,8 @@ public class HomeFragment extends Fragment {
     private EditText edtPoker5;
     private LinearLayout container;
     private ArrayList<String> listPoker = new ArrayList<String>();
+
+    private HomeFragmentListener homeFragmentListener;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -90,7 +106,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         btnResult = (Button) getView().findViewById(R.id.button_result);
         tvAdd = (TextView) getView().findViewById(R.id.add_poker);
-        container = (LinearLayout) getView().findViewById(R.id.container);
+        container = (LinearLayout) getView().findViewById(R.id.input_container);
         LayoutInflater layoutInflater =
                 (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View subView = layoutInflater.inflate(R.layout.shared_input_poker, null);
@@ -118,7 +134,100 @@ public class HomeFragment extends Fragment {
         btnResult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int size = listPoker.size();
+                Toast.makeText(getContext(), "推した", Toast.LENGTH_LONG).show();
+                Log.e("Home Activity", "Request Start");
+                String url = "http://p0kerhands.herokuapp.com/api/v1/cards/check";
+                JSONObject postparams = new JSONObject();
+                JSONArray jsArrayPoker = new JSONArray(listPoker);
+                try {
+                    postparams.put("cards", jsArrayPoker);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, url, postparams,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            //Success Callback
+                            Log.e("Home Activity", "JsonObjectRequest onResponse: " + response.toString());
+                            if (!response.isNull("error")) {
+                                try {
+                                    JSONArray errorResponse = response.getJSONArray("error");
+                                    for (int i= 0; i < errorResponse.length(); i++) {
+                                        JSONObject currentError = errorResponse.getJSONObject(i);
+                                        int currentErrPoker = listPoker.indexOf(currentError.getString("card"));
+                                        String currentErrPokerMsg = currentError.getString("msg");
+                                        View thisChild = container.getChildAt(currentErrPoker);
+                                        final String regex = "[1-9]+";
+                                        Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+                                        Matcher matcher = pattern.matcher(currentErrPokerMsg);
+                                        if (matcher.find()) {
+                                            switch(matcher.group(0)) {
+                                                case "1": {
+                                                    TextView tvError = (TextView) thisChild.findViewById(R.id.poker_1_error_msg);
+                                                    edtPoker1 = (EditText) thisChild.findViewById(R.id.input_poker_1);
+                                                    tvError.setText(currentErrPokerMsg);
+                                                    break;
+                                                }
+                                                case "2": {
+                                                    TextView tvError = (TextView) thisChild.findViewById(R.id.poker_2_error_msg);
+                                                    tvError.setText(currentErrPokerMsg);
+                                                    break;
+                                                }
+                                                case "3": {
+                                                    TextView tvError = (TextView) thisChild.findViewById(R.id.poker_3_error_msg);
+                                                    tvError.setText(currentErrPokerMsg);
+                                                    break;
+                                                }
+                                                case "4": {
+                                                    TextView tvError = (TextView) thisChild.findViewById(R.id.poker_4_error_msg);
+                                                    tvError.setText(currentErrPokerMsg);
+                                                    break;
+                                                }
+                                                case "5": {
+                                                    TextView tvError = (TextView) thisChild.findViewById(R.id.poker_5_error_msg);
+                                                    tvError.setText(currentErrPokerMsg);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                ArrayList<Poker> pokerResults = new ArrayList<Poker>();
+                                try {
+                                    JSONArray resultResponse = response.getJSONArray("result");
+                                    for (int i= 0; i < resultResponse.length(); i++) {
+                                        JSONObject currentPokerObj = resultResponse.getJSONObject(i);
+                                        String currentPokerCard = currentPokerObj.getString("card");
+                                        String currentPokerPosition = currentPokerObj.getString("hand");
+                                        boolean currentPokerStrong = currentPokerObj.getBoolean("best");
+                                        Poker currentPoker = new Poker(currentPokerCard, currentPokerPosition, currentPokerStrong);
+                                        pokerResults.add(currentPoker);
+                                    }
+                                    if (homeFragmentListener != null) {
+                                        homeFragmentListener.fragmentChange(pokerResults);
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            int i = 0;
+                            //Failure Callback
+                            Log.e("Volley", error.getMessage());
+                        }
+                    });
+
+                PokerSingleton.getInstance(getContext()).getRequestQueue().add(jsonObjReq);
             }
         });
     }
@@ -178,6 +287,27 @@ public class HomeFragment extends Fragment {
 
         }
     };
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof HomeFragmentListener) {
+            homeFragmentListener = (HomeFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        homeFragmentListener = null;
+    }
+
+    public interface HomeFragmentListener {
+        void fragmentChange(ArrayList<Poker> content);
+    }
 
 
 }

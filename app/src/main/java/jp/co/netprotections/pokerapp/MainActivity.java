@@ -3,6 +3,7 @@ package jp.co.netprotections.pokerapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
@@ -10,7 +11,9 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragmentListener{
     BottomNavigationView bottomNavigation;
 
     @Override
@@ -24,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
+        transaction.replace(R.id.content_frame, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -45,4 +48,13 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+    @Override
+    public void fragmentChange(ArrayList<Poker> content) {
+        ResultFragment resultFragment = ResultFragment.newInstance(content);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_frame, resultFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 }
