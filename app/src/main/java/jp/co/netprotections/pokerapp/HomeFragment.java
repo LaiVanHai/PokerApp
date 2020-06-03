@@ -61,6 +61,8 @@ public class HomeFragment extends Fragment {
     private LinearLayout container;
     private ArrayList<String> listPoker = new ArrayList<String>();
 
+    private boolean firstLoadFag = true;
+
     private HomeFragmentListener homeFragmentListener;
 
     public HomeFragment() {
@@ -92,12 +94,19 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        if (savedInstanceState != null) {
+            String value = savedInstanceState.getString("KEY");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        if (savedInstanceState != null) {
+            String ste = savedInstanceState.getString("KEY");
+            // Do something with value if needed
+        }
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -108,12 +117,15 @@ public class HomeFragment extends Fragment {
         tvAdd = (TextView) getView().findViewById(R.id.add_poker);
         container = (LinearLayout) getView().findViewById(R.id.input_container);
         LayoutInflater layoutInflater =
-                (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View subView = layoutInflater.inflate(R.layout.shared_input_poker, null);
         container.addView(subView);
-        listPoker.add("");
         CheckInput(subView);
-
+        if (firstLoadFag) {
+            listPoker.add("");
+            firstLoadFag = false;
+        }
+        
         tvAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -309,5 +321,9 @@ public class HomeFragment extends Fragment {
         void activityChange(ArrayList<Poker> content);
     }
 
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("KEY", "value");
+        super.onSaveInstanceState(outState);
+    }
 }

@@ -15,7 +15,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragmentListener{
+    private HomeFragment fragmentHome = HomeFragment.newInstance("", "");
     BottomNavigationView bottomNavigation;
+    private final String HOME_FRAGMENT_TAG = "home_fragment_tag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +25,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         setContentView(R.layout.activity_main);
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-        openFragment(HomeFragment.newInstance("", ""));
         getSupportActionBar().setTitle(R.string.poker_title);
-
+        openFragment(fragmentHome);
     }
 
     public void openFragment(Fragment fragment) {
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 switch(item.getItemId()) {
                     case R.id.poker:
                         getSupportActionBar().setTitle(R.string.poker_title);
-                        openFragment(HomeFragment.newInstance("", ""));
+                        openFragment(fragmentHome);
                         return true;
                     case R.id.history:
                         getSupportActionBar().setTitle(R.string.history_title);
