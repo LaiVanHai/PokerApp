@@ -41,20 +41,7 @@ public class ResultActivity extends AppCompatActivity {
         if (bundle != null) {
             pokerResultList = bundle.getParcelableArrayList(KEY_POKER_RESULTS);
         }
-
         openFragment(ResultFragment.newInstance(pokerResultList));
-//        LinearLayout resultContainer = (LinearLayout) findViewById(R.id.result_container);
-//        LayoutInflater layoutInflater =
-//                (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        for(int i = 0; i < pokerResultList.size(); i++) {
-//            Poker childResult = pokerResultList.get(i);
-//            View subView = layoutInflater.inflate(R.layout.shared_result_poker, null);
-//            TextView title = (TextView) subView.findViewById(R.id.result_title);
-//            TextView subtitle = (TextView) subView.findViewById(R.id.result_subtitle);
-//            title.setText(childResult.getInputPoker());
-//            subtitle.setText(childResult.getPokerPosition());
-//            resultContainer.addView(subView);
-//        }
     }
 
     public void openFragment(Fragment fragment) {
