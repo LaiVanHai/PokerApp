@@ -3,8 +3,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="poker">Poker</string>
-    <string name="history">履歴</string>
     <string name="add_poker">項目を追加</string>
     <string name="input_title">値を入力してください</string>
     <string name="poker_value_1">値1</string>
@@ -14,5 +12,8 @@
     <string name="poker_value_5">値5</string>
     <string name="poker_hint">値を入力</string>
     <string name="result">結果を収得</string>
+    <string name="poker_title">Poker</string>
+    <string name="result_title">結果</string>
+    <string name="history_title">履歴</string>
 
 </resources>

@@ -209,7 +209,7 @@ public class HomeFragment extends Fragment {
                                         pokerResults.add(currentPoker);
                                     }
                                     if (homeFragmentListener != null) {
-                                        homeFragmentListener.fragmentChange(pokerResults);
+                                        homeFragmentListener.activityChange(pokerResults);
                                     }
 
                                 } catch (JSONException e) {
@@ -295,7 +295,7 @@ public class HomeFragment extends Fragment {
             homeFragmentListener = (HomeFragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                + " must implement HomeFragmentListener");
         }
     }
 
@@ -306,7 +306,7 @@ public class HomeFragment extends Fragment {
     }
 
     public interface HomeFragmentListener {
-        void fragmentChange(ArrayList<Poker> content);
+        void activityChange(ArrayList<Poker> content);
     }
 
 

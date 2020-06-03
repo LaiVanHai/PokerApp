@@ -4,10 +4,10 @@
         android:id="@+id/poker"
         android:enabled="true"
         android:icon="@drawable/ic_navigation"
-        android:title="@string/poker"/>
+        android:title="@string/poker_title"/>
     <item
         android:id="@+id/history"
         android:enabled="true"
         android:icon="@drawable/ic_navigation"
-        android:title="@string/history"/>
+        android:title="@string/history_title"/>
 </menu>

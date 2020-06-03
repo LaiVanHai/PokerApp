@@ -3,6 +3,7 @@ package jp.co.netprotections.pokerapp;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -53,6 +54,14 @@ public class ResultFragment extends Fragment {
         if (getArguments() != null) {
             mParam = getArguments().getParcelableArrayList(ARG_PARAM);
         }
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back button event
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @Override

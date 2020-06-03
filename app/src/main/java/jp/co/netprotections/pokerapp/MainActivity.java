@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         openFragment(HomeFragment.newInstance("", ""));
+        getSupportActionBar().setTitle(R.string.poker_title);
+
     }
 
     public void openFragment(Fragment fragment) {
@@ -38,9 +41,11 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()) {
                     case R.id.poker:
+                        getSupportActionBar().setTitle(R.string.poker_title);
                         openFragment(HomeFragment.newInstance("", ""));
                         return true;
                     case R.id.history:
+                        getSupportActionBar().setTitle(R.string.history_title);
                         openFragment(HistoryFragment.newInstance("", ""));
                         return true;
                 }
@@ -49,12 +54,11 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         };
 
     @Override
-    public void fragmentChange(ArrayList<Poker> content) {
-        ResultFragment resultFragment = ResultFragment.newInstance(content);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_frame, resultFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+    public void activityChange(ArrayList<Poker> content) {
+        Intent intent = new Intent(this, ResultActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(ResultActivity.KEY_POKER_RESULTS, content);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }
