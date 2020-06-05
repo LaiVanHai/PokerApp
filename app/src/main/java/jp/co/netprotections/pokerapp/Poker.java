@@ -7,12 +7,14 @@ public class Poker implements Parcelable {
     private String inputPoker;
     private String pokerPosition;
     private boolean strongPoker;
+    private String checkTime;
 
-    public Poker(String inputPoker, String pokerPosition, boolean strongPoker) {
+    public Poker(String inputPoker, String pokerPosition, boolean strongPoker, String checkTime) {
         super();
         this.inputPoker = inputPoker;
         this.pokerPosition = pokerPosition;
         this.strongPoker = strongPoker;
+        this.checkTime = checkTime;
     }
 
     protected Poker(Parcel in) {
@@ -43,6 +45,14 @@ public class Poker implements Parcelable {
 
     public void setStrongPoker(boolean strongPoker) {
         this.strongPoker = strongPoker;
+    }
+
+    public String getCheckTime() {
+        return checkTime;
+    }
+
+    public void setCheckTime(String checkTime) {
+        this.checkTime = checkTime;
     }
 
     public static final Creator<Poker> CREATOR = new Creator<Poker>() {

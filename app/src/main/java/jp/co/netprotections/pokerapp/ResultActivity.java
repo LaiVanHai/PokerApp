@@ -66,7 +66,8 @@ public class ResultActivity extends AppCompatActivity {
                         getSupportActionBar().setTitle(R.string.history_title);
                         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                         getSupportActionBar().setHomeButtonEnabled(false);
-                        openFragment(HistoryFragment.newInstance("", ""));
+                        ArrayList<Poker> listCheckedPoker = MyStorage.loadHistories(getBaseContext());
+                        openFragment(HistoryFragment.newInstance(listCheckedPoker));
                         return true;
                 }
                 return false;

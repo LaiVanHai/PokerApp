@@ -3,6 +3,7 @@ package jp.co.netprotections.pokerapp;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -31,7 +32,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -217,8 +221,11 @@ public class HomeFragment extends Fragment {
                                         String currentPokerCard = currentPokerObj.getString("card");
                                         String currentPokerPosition = currentPokerObj.getString("hand");
                                         boolean currentPokerStrong = currentPokerObj.getBoolean("best");
-                                        Poker currentPoker = new Poker(currentPokerCard, currentPokerPosition, currentPokerStrong);
+                                        SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd HH:mm", Locale.getDefault());
+                                        String currentDateandTime = sdf.format(new Date());
+                                        Poker currentPoker = new Poker(currentPokerCard, currentPokerPosition, currentPokerStrong, currentDateandTime);
                                         pokerResults.add(currentPoker);
+                                        MyStorage.addCheckedResult(getContext(), currentPoker);
                                     }
                                     if (homeFragmentListener != null) {
                                         homeFragmentListener.activityChange(pokerResults);
@@ -319,11 +326,5 @@ public class HomeFragment extends Fragment {
 
     public interface HomeFragmentListener {
         void activityChange(ArrayList<Poker> content);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putString("KEY", "value");
-        super.onSaveInstanceState(outState);
     }
 }

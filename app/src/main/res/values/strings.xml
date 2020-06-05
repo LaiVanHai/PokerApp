@@ -3,6 +3,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="preference_file_key">POKER_CHECK_HISTORY</string>
     <string name="add_poker">項目を追加</string>
     <string name="input_title">値を入力してください</string>
     <string name="poker_value_1">値1</string>

@@ -1,6 +1,7 @@
 package jp.co.netprotections.pokerapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -81,7 +82,7 @@ public class ResultFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_result, container, false);
         final LinearLayout resultContainer = (LinearLayout) view.findViewById(R.id.result_container);
         LayoutInflater layoutInflater =
-                (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         String url = "https://source.unsplash.com/random/80x80";
         for(int i = 0; i < mParam.size(); i++) {
             Poker childResult = mParam.get(i);
@@ -92,19 +93,19 @@ public class ResultFragment extends Fragment {
             title.setText(childResult.getInputPoker());
             subtitle.setText(childResult.getPokerPosition());
             ImageRequest request = new ImageRequest(url,
-                    new Response.Listener<Bitmap>() {
-                        @Override
-                        public void onResponse(Bitmap bitmap) {
-                            imageView.setImageBitmap(bitmap);
-                            resultContainer.addView(subView);
-                        }
-                    }, 0, 0, null,
-                    new Response.ErrorListener() {
-                        public void onErrorResponse(VolleyError error) {
-                            imageView.setImageResource(R.drawable.ic_notifications);
-                            resultContainer.addView(subView);
-                        }
-                    });
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap bitmap) {
+                        imageView.setImageBitmap(bitmap);
+                        resultContainer.addView(subView);
+                    }
+                }, 0, 0, null,
+                new Response.ErrorListener() {
+                    public void onErrorResponse(VolleyError error) {
+                        imageView.setImageResource(R.drawable.ic_notifications);
+                        resultContainer.addView(subView);
+                    }
+                });
             PokerSingleton.getInstance(getContext()).getRequestQueue().add(request);
         }
         return view;
