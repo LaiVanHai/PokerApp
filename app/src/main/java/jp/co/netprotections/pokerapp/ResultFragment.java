@@ -1,5 +1,6 @@
 package jp.co.netprotections.pokerapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -83,7 +84,7 @@ public class ResultFragment extends Fragment {
         final LinearLayout resultContainer = (LinearLayout) view.findViewById(R.id.result_container);
         LayoutInflater layoutInflater =
             (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        String url = "https://source.unsplash.com/random/80x80";
+        String url = getString(R.string.get_img_url);
         for(int i = 0; i < mParam.size(); i++) {
             Poker childResult = mParam.get(i);
             final View subView = layoutInflater.inflate(R.layout.shared_result_poker, null);

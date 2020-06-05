@@ -16,5 +16,8 @@
     <string name="poker_title">Poker</string>
     <string name="result_title">結果</string>
     <string name="history_title">履歴</string>
+    <string name="wating_response">早々お待ちください...</string>
+    <string name="get_img_url">https://source.unsplash.com/random/80x80</string>
+    <string name="check_poker_url">http://p0kerhands.herokuapp.com/api/v1/cards/check</string>
 
 </resources>

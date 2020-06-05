@@ -2,6 +2,7 @@ package jp.co.netprotections.pokerapp;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
@@ -152,9 +153,10 @@ public class HomeFragment extends Fragment {
         btnResult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "推した", Toast.LENGTH_LONG).show();
+                final ProgressDialog progressdialog = new ProgressDialog(getContext());
+                progressdialog.setMessage(getString(R.string.wating_response));
                 Log.e("Home Activity", "Request Start");
-                String url = "http://p0kerhands.herokuapp.com/api/v1/cards/check";
+                String url = getString(R.string.check_poker_url);
                 JSONObject postparams = new JSONObject();
                 JSONArray jsArrayPoker = new JSONArray(listPoker);
                 try {
@@ -167,6 +169,7 @@ public class HomeFragment extends Fragment {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            progressdialog.dismiss();
                             //Success Callback
                             Log.e("Home Activity", "JsonObjectRequest onResponse: " + response.toString());
                             if (!response.isNull("error")) {
@@ -263,6 +266,7 @@ public class HomeFragment extends Fragment {
                     });
 
                 PokerSingleton.getInstance(getContext()).getRequestQueue().add(jsonObjReq);
+                progressdialog.show();
             }
         });
     }
