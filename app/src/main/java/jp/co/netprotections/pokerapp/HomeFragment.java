@@ -4,6 +4,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -182,28 +184,42 @@ public class HomeFragment extends Fragment {
                                             switch(matcher.group(0)) {
                                                 case "1": {
                                                     TextView tvError = (TextView) thisChild.findViewById(R.id.poker_1_error_msg);
-                                                    edtPoker1 = (EditText) thisChild.findViewById(R.id.input_poker_1);
                                                     tvError.setText(currentErrPokerMsg);
+                                                    TextView tvInputPoker1 = (TextView) thisChild.findViewById(R.id.input_poker_1_title);
+                                                    edtPoker1 = (EditText) thisChild.findViewById(R.id.input_poker_1);
+                                                    SetError(tvInputPoker1, edtPoker1);
                                                     break;
                                                 }
                                                 case "2": {
                                                     TextView tvError = (TextView) thisChild.findViewById(R.id.poker_2_error_msg);
                                                     tvError.setText(currentErrPokerMsg);
+                                                    TextView tvInputPoker2 = (TextView) thisChild.findViewById(R.id.input_poker_2_title);
+                                                    edtPoker2 = (EditText) thisChild.findViewById(R.id.input_poker_2);
+                                                    SetError(tvInputPoker2, edtPoker2);
                                                     break;
                                                 }
                                                 case "3": {
                                                     TextView tvError = (TextView) thisChild.findViewById(R.id.poker_3_error_msg);
                                                     tvError.setText(currentErrPokerMsg);
+                                                    TextView tvInputPoker3 = (TextView) thisChild.findViewById(R.id.input_poker_3_title);
+                                                    edtPoker3 = (EditText) thisChild.findViewById(R.id.input_poker_3);
+                                                    SetError(tvInputPoker3, edtPoker3);
                                                     break;
                                                 }
                                                 case "4": {
                                                     TextView tvError = (TextView) thisChild.findViewById(R.id.poker_4_error_msg);
                                                     tvError.setText(currentErrPokerMsg);
+                                                    TextView tvInputPoker4 = (TextView) thisChild.findViewById(R.id.input_poker_4_title);
+                                                    edtPoker4 = (EditText) thisChild.findViewById(R.id.input_poker_4);
+                                                    SetError(tvInputPoker4, edtPoker4);
                                                     break;
                                                 }
                                                 case "5": {
                                                     TextView tvError = (TextView) thisChild.findViewById(R.id.poker_5_error_msg);
                                                     tvError.setText(currentErrPokerMsg);
+                                                    TextView tvInputPoker5 = (TextView) thisChild.findViewById(R.id.input_poker_5_title);
+                                                    edtPoker5 = (EditText) thisChild.findViewById(R.id.input_poker_5);
+                                                    SetError(tvInputPoker5, edtPoker5);
                                                     break;
                                                 }
                                             }
@@ -303,7 +319,6 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void afterTextChanged(Editable s) {
-
         }
     };
 
@@ -326,5 +341,14 @@ public class HomeFragment extends Fragment {
 
     public interface HomeFragmentListener {
         void activityChange(ArrayList<Poker> content);
+    }
+
+    private void SetError(TextView title, EditText edText){
+        Drawable error_icon = getResources().getDrawable(R.drawable.ic_error);
+        error_icon.setBounds(0, 0, 40, 40);
+        edText.setCompoundDrawables(null,null, error_icon,null);
+        edText.getBackground().setColorFilter(getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
+        edText.setTextColor(getResources().getColor(R.color.colorRed));
+        title.setTextColor(getResources().getColor(R.color.colorRed));
     }
 }

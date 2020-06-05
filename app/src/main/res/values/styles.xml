@@ -39,4 +39,8 @@
         <item name="android:textColor">#993C3C43</item>
     </style>
 
+    <style name="material_button_custom_style" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/color_states_material_button</item>
+    </style>
+
 </resources>

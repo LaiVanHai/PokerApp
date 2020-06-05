@@ -22,7 +22,7 @@
         android:layout_marginTop="12dp"
         android:hint="@string/poker_hint"
         android:textAppearance="@style/hint_text_style"
-        android:background="@drawable/border"/>
+        android:background="@drawable/border" />
 
     <TextView
         android:layout_below="@+id/input_poker_1"

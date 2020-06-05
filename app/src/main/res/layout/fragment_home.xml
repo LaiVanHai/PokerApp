@@ -51,13 +51,15 @@
 
         <Button
             android:id="@+id/button_result"
-            android:layout_below="@+id/container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="96dp"
             android:layout_marginLeft="20dp"
+            style="@style/material_button_custom_style"
+            android:textColor="@color/colorWhite"
             android:textAppearance="@style/label_text_style"
-            android:text="@string/result" />
+            android:text="@string/result"
+            android:layout_marginStart="20dp" />
 
 
     </LinearLayout>
