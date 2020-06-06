@@ -1,16 +1,22 @@
 package jp.co.netprotections.pokerapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -30,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         getSupportActionBar().setTitle(R.string.poker_title);
         openFragment(fragmentHome);
+        isNetworkConnectionAvailable();
     }
 
     public void openFragment(Fragment fragment) {
@@ -65,5 +72,37 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         bundle.putParcelableArrayList(ResultActivity.KEY_POKER_RESULTS, content);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    public void checkNetworkConnection(){
+        AlertDialog.Builder builder =new AlertDialog.Builder(this);
+        builder.setTitle("No internet Connection");
+        builder.setMessage("Please turn on internet connection to continue");
+        builder.setNegativeButton("close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    public boolean isNetworkConnectionAvailable(){
+        ConnectivityManager cm =
+                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnected();
+        if(isConnected) {
+            Log.d("Network", "Connected");
+            return true;
+        }
+        else{
+            checkNetworkConnection();
+            Log.d("Network","Not Connected");
+            return false;
+        }
     }
 }

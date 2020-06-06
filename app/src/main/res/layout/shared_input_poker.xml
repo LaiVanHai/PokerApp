@@ -32,7 +32,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="6dp"
-        android:textAppearance="@style/error_text_style"/>
+        android:textAppearance="@style/error_text_style"
+        />
 
     <TextView
         android:layout_below="@+id/poker_1_error_msg"

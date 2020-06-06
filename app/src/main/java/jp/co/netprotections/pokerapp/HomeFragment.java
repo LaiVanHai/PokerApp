@@ -67,6 +67,9 @@ public class HomeFragment extends Fragment {
     private EditText edtPoker5;
     private LinearLayout container;
     private ArrayList<String> listPoker = new ArrayList<String>();
+    private ArrayList<TextView> listTitleErr = new ArrayList<TextView>();
+    private ArrayList<TextView> listMsgErr = new ArrayList<TextView>();
+    private ArrayList<EditText> listInputErr = new ArrayList<EditText>();
 
     private boolean firstLoadFag = true;
 
@@ -154,6 +157,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 final ProgressDialog progressdialog = new ProgressDialog(getContext());
+                deleteOldError();
                 progressdialog.setMessage(getString(R.string.wating_response));
                 Log.e("Home Activity", "Request Start");
                 String url = getString(R.string.check_poker_url);
@@ -190,7 +194,7 @@ public class HomeFragment extends Fragment {
                                                     tvError.setText(currentErrPokerMsg);
                                                     TextView tvInputPoker1 = (TextView) thisChild.findViewById(R.id.input_poker_1_title);
                                                     edtPoker1 = (EditText) thisChild.findViewById(R.id.input_poker_1);
-                                                    SetError(tvInputPoker1, edtPoker1);
+                                                    setError(tvInputPoker1, edtPoker1, tvError);
                                                     break;
                                                 }
                                                 case "2": {
@@ -198,7 +202,7 @@ public class HomeFragment extends Fragment {
                                                     tvError.setText(currentErrPokerMsg);
                                                     TextView tvInputPoker2 = (TextView) thisChild.findViewById(R.id.input_poker_2_title);
                                                     edtPoker2 = (EditText) thisChild.findViewById(R.id.input_poker_2);
-                                                    SetError(tvInputPoker2, edtPoker2);
+                                                    setError(tvInputPoker2, edtPoker2, tvError);
                                                     break;
                                                 }
                                                 case "3": {
@@ -206,7 +210,7 @@ public class HomeFragment extends Fragment {
                                                     tvError.setText(currentErrPokerMsg);
                                                     TextView tvInputPoker3 = (TextView) thisChild.findViewById(R.id.input_poker_3_title);
                                                     edtPoker3 = (EditText) thisChild.findViewById(R.id.input_poker_3);
-                                                    SetError(tvInputPoker3, edtPoker3);
+                                                    setError(tvInputPoker3, edtPoker3, tvError);
                                                     break;
                                                 }
                                                 case "4": {
@@ -214,7 +218,7 @@ public class HomeFragment extends Fragment {
                                                     tvError.setText(currentErrPokerMsg);
                                                     TextView tvInputPoker4 = (TextView) thisChild.findViewById(R.id.input_poker_4_title);
                                                     edtPoker4 = (EditText) thisChild.findViewById(R.id.input_poker_4);
-                                                    SetError(tvInputPoker4, edtPoker4);
+                                                    setError(tvInputPoker4, edtPoker4, tvError);
                                                     break;
                                                 }
                                                 case "5": {
@@ -222,7 +226,7 @@ public class HomeFragment extends Fragment {
                                                     tvError.setText(currentErrPokerMsg);
                                                     TextView tvInputPoker5 = (TextView) thisChild.findViewById(R.id.input_poker_5_title);
                                                     edtPoker5 = (EditText) thisChild.findViewById(R.id.input_poker_5);
-                                                    SetError(tvInputPoker5, edtPoker5);
+                                                    setError(tvInputPoker5, edtPoker5, tvError);
                                                     break;
                                                 }
                                             }
@@ -347,12 +351,34 @@ public class HomeFragment extends Fragment {
         void activityChange(ArrayList<Poker> content);
     }
 
-    private void SetError(TextView title, EditText edText){
+    private void setError(TextView tvTitle, EditText edText, TextView tvErrorMsg){
+        listTitleErr.add(tvTitle);
+        listMsgErr.add(tvErrorMsg);
+        listInputErr.add(edText);
         Drawable error_icon = getResources().getDrawable(R.drawable.ic_error);
         error_icon.setBounds(0, 0, 40, 40);
         edText.setCompoundDrawables(null,null, error_icon,null);
         edText.getBackground().setColorFilter(getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
         edText.setTextColor(getResources().getColor(R.color.colorRed));
-        title.setTextColor(getResources().getColor(R.color.colorRed));
+        tvTitle.setTextColor(getResources().getColor(R.color.colorRed));
+    }
+
+    private void deleteOldError(){
+        while (listTitleErr.size() > 0) {
+            listTitleErr.get(0).setTextColor(getResources().getColor(R.color.colorBlack));
+            listTitleErr.remove(0);
+        }
+        while (listMsgErr.size() > 0) {
+            listMsgErr.get(0).setText("");
+            listMsgErr.remove(0);
+        }
+        while (listInputErr.size() > 0) {
+            EditText edText = listInputErr.get(0);
+            edText.setCompoundDrawables(null,null, null,null);
+            edText.getBackground().setColorFilter(getResources().getColor(R.color.colorGrey2), PorterDuff.Mode.SRC_ATOP);
+            edText.setTextColor(getResources().getColor(R.color.colorBlack));
+            listInputErr.remove(0);
+        }
+
     }
 }
