@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         getSupportActionBar().setTitle(R.string.poker_title);
         openFragment(fragmentHome);
-        isNetworkConnectionAvailable();
     }
 
     public void openFragment(Fragment fragment) {
@@ -88,13 +87,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         alertDialog.show();
     }
 
+    @Override
     public boolean isNetworkConnectionAvailable(){
         ConnectivityManager cm =
-                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-
+            (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnected();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnected();
         if(isConnected) {
             Log.d("Network", "Connected");
             return true;
