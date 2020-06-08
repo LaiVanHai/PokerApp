@@ -1,11 +1,8 @@
-package jp.co.netprotections.pokerapp;
+package jp.co.netprotections.pokerapp.ui.home;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,7 +15,6 @@ import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,21 +40,12 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jp.co.netprotections.pokerapp.MyStorage;
+import jp.co.netprotections.pokerapp.Poker;
+import jp.co.netprotections.pokerapp.PokerSingleton;
+import jp.co.netprotections.pokerapp.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private Button btnResult;
     private TextView tvAdd;
@@ -67,7 +54,7 @@ public class HomeFragment extends Fragment {
     private EditText edtPoker3;
     private EditText edtPoker4;
     private EditText edtPoker5;
-    private LinearLayout container;
+    private LinearLayout inputContainer;
     private ArrayList<String> listPoker = new ArrayList<String>();
     private ArrayList<TextView> listTitleErr = new ArrayList<TextView>();
     private ArrayList<TextView> listMsgErr = new ArrayList<TextView>();
@@ -81,75 +68,43 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-        if (savedInstanceState != null) {
-            String value = savedInstanceState.getString("KEY");
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        if (savedInstanceState != null) {
-            String ste = savedInstanceState.getString("KEY");
-            // Do something with value if needed
-        }
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        btnResult = (Button) root.findViewById(R.id.button_result);
+        inputContainer = (LinearLayout) root.findViewById(R.id.input_container);
+        LayoutInflater layoutInflater =
+            (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View subView = layoutInflater.inflate(R.layout.shared_input_poker, null);
+        inputContainer.addView(subView);
+        CheckInput(subView);
+        listPoker.add("");
+        return root;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        btnResult = (Button) getView().findViewById(R.id.button_result);
         tvAdd = (TextView) getView().findViewById(R.id.add_poker);
-        container = (LinearLayout) getView().findViewById(R.id.input_container);
-        LayoutInflater layoutInflater =
-            (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View subView = layoutInflater.inflate(R.layout.shared_input_poker, null);
-        container.addView(subView);
-        CheckInput(subView);
-        if (firstLoadFag) {
-            listPoker.add("");
-            firstLoadFag = false;
-        }
-        
+
         tvAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LayoutInflater layoutInflater =
                         (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = layoutInflater.inflate(R.layout.shared_input_poker, null);
-                int childCount = container.getChildCount();
-                View beforeView = container.getChildAt(childCount-1);
+                int childCount = inputContainer.getChildCount();
+                View beforeView = inputContainer.getChildAt(childCount-1);
                 View line = beforeView.findViewById(R.id.line);
                 line.setVisibility(View.VISIBLE);
                 listPoker.add("");
-                container.addView(view);
+                inputContainer.addView(view);
                 Toast.makeText(getContext(), "追加した", Toast.LENGTH_LONG).show();
                 CheckInput(view);
             }
@@ -191,9 +146,9 @@ public class HomeFragment extends Fragment {
             String strElement;
             Boolean currentStatus, btnActiveStatus = true;
 
-            int childCount = container.getChildCount();
+            int childCount = inputContainer.getChildCount();
             for (int i = 0; i < childCount; i++){
-                View thisChild = container.getChildAt(i);
+                View thisChild = inputContainer.getChildAt(i);
                 edtPoker1 = (EditText) thisChild.findViewById(R.id.input_poker_1);
                 edtPoker2 = (EditText) thisChild.findViewById(R.id.input_poker_2);
                 edtPoker3 = (EditText) thisChild.findViewById(R.id.input_poker_3);
@@ -300,7 +255,7 @@ public class HomeFragment extends Fragment {
                                     JSONObject currentError = errorResponse.getJSONObject(i);
                                     int currentErrPoker = listPoker.indexOf(currentError.getString("card"));
                                     String currentErrPokerMsg = currentError.getString("msg");
-                                    View thisChild = container.getChildAt(currentErrPoker);
+                                    View thisChild = inputContainer.getChildAt(currentErrPoker);
                                     final String regex = "[1-9]+";
                                     Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
                                     Matcher matcher = pattern.matcher(currentErrPokerMsg);
@@ -381,9 +336,8 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         //Failure Callback
-                        Log.e("Volley", error.getMessage());
                         progressdialog.dismiss();
-                        AlertDialog.Builder builder =new AlertDialog.Builder(getContext());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("サーバーエラー");
                         builder.setMessage("後程、お試しください！");
                         builder.setNegativeButton("閉じる", new DialogInterface.OnClickListener() {

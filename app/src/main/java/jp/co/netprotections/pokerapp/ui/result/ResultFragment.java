@@ -1,8 +1,6 @@
-package jp.co.netprotections.pokerapp;
+package jp.co.netprotections.pokerapp.ui.result;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -16,15 +14,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import jp.co.netprotections.pokerapp.Poker;
+import jp.co.netprotections.pokerapp.PokerSingleton;
+import jp.co.netprotections.pokerapp.R;
 
 
 /**
@@ -43,14 +41,6 @@ public class ResultFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ResultFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static ResultFragment newInstance(ArrayList<Poker> params) {
         ResultFragment fragment = new ResultFragment();
