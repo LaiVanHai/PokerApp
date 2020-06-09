@@ -15,18 +15,20 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragmentListener{
-    private HomeFragment fragmentHome = HomeFragment.newInstance("", "");
+    private HomeFragment fragmentHome = HomeFragment.newInstance("","");
     BottomNavigationView bottomNavigation;
-    private final String HOME_FRAGMENT_TAG = "home_fragment_tag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +37,17 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         getSupportActionBar().setTitle(R.string.poker_title);
-        openFragment(fragmentHome);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.content_frame, fragmentHome).commit();
     }
 
     public void openFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_frame, fragment);
+        transaction.add(R.id.content_frame, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
 
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
         new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -52,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 switch(item.getItemId()) {
                     case R.id.poker:
                         getSupportActionBar().setTitle(R.string.poker_title);
-                        openFragment(fragmentHome);
+                        getSupportFragmentManager().popBackStack();
                         return true;
                     case R.id.history:
                         getSupportActionBar().setTitle(R.string.history_title);
