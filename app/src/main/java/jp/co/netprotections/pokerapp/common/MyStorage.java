@@ -1,15 +1,15 @@
-package jp.co.netprotections.pokerapp;
+package jp.co.netprotections.pokerapp.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import jp.co.netprotections.pokerapp.model.Poker;
 
 
 public class MyStorage {

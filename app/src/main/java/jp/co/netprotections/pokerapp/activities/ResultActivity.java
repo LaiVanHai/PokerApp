@@ -1,24 +1,23 @@
-package jp.co.netprotections.pokerapp;
+package jp.co.netprotections.pokerapp.activities;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+
+import jp.co.netprotections.pokerapp.R;
+import jp.co.netprotections.pokerapp.common.MyStorage;
+import jp.co.netprotections.pokerapp.fragments.HistoryFragment;
+import jp.co.netprotections.pokerapp.fragments.ResultFragment;
+import jp.co.netprotections.pokerapp.model.Poker;
 
 public class ResultActivity extends AppCompatActivity {
     public static final String KEY_POKER_RESULTS = "poker_results";

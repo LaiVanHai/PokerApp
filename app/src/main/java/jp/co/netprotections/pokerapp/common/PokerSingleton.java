@@ -1,4 +1,4 @@
-package jp.co.netprotections.pokerapp;
+package jp.co.netprotections.pokerapp.common;
 
 import android.content.Context;
 

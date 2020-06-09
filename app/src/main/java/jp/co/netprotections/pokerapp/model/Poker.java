@@ -1,4 +1,4 @@
-package jp.co.netprotections.pokerapp;
+package jp.co.netprotections.pokerapp.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

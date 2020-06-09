@@ -1,24 +1,14 @@
-package jp.co.netprotections.pokerapp;
+package jp.co.netprotections.pokerapp.fragments;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +17,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -44,22 +39,12 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jp.co.netprotections.pokerapp.R;
+import jp.co.netprotections.pokerapp.common.MyStorage;
+import jp.co.netprotections.pokerapp.common.PokerSingleton;
+import jp.co.netprotections.pokerapp.model.Poker;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private Button btnResult;
     private TextView tvAdd;
     private EditText edtPoker1;
@@ -81,44 +66,14 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-        if (savedInstanceState != null) {
-            String value = savedInstanceState.getString("KEY");
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        if (savedInstanceState != null) {
-            String ste = savedInstanceState.getString("KEY");
-            // Do something with value if needed
-        }
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -129,7 +84,7 @@ public class HomeFragment extends Fragment {
         tvAdd = (TextView) getView().findViewById(R.id.add_poker);
         container = (LinearLayout) getView().findViewById(R.id.input_container);
         LayoutInflater layoutInflater =
-            (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View subView = layoutInflater.inflate(R.layout.shared_input_poker, null);
         container.addView(subView);
         CheckInput(subView);
@@ -137,7 +92,7 @@ public class HomeFragment extends Fragment {
             listPoker.add("");
             firstLoadFag = false;
         }
-        
+
         tvAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +100,7 @@ public class HomeFragment extends Fragment {
                         (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = layoutInflater.inflate(R.layout.shared_input_poker, null);
                 int childCount = container.getChildCount();
-                View beforeView = container.getChildAt(childCount-1);
+                View beforeView = container.getChildAt(childCount - 1);
                 View line = beforeView.findViewById(R.id.line);
                 line.setVisibility(View.VISIBLE);
                 listPoker.add("");
@@ -192,7 +147,7 @@ public class HomeFragment extends Fragment {
             Boolean currentStatus, btnActiveStatus = true;
 
             int childCount = container.getChildCount();
-            for (int i = 0; i < childCount; i++){
+            for (int i = 0; i < childCount; i++) {
                 View thisChild = container.getChildAt(i);
                 edtPoker1 = (EditText) thisChild.findViewById(R.id.input_poker_1);
                 edtPoker2 = (EditText) thisChild.findViewById(R.id.input_poker_2);
@@ -205,10 +160,10 @@ public class HomeFragment extends Fragment {
                 String pokerInput4 = edtPoker4.getText().toString().trim();
                 String pokerInput5 = edtPoker5.getText().toString().trim();
                 currentStatus = !pokerInput1.isEmpty() && !pokerInput2.isEmpty() &&
-                    !pokerInput3.isEmpty() && !pokerInput4.isEmpty() && !pokerInput5.isEmpty();
+                        !pokerInput3.isEmpty() && !pokerInput4.isEmpty() && !pokerInput5.isEmpty();
                 if (currentStatus) {
                     strElement = pokerInput1 + " " + pokerInput2 + " " + pokerInput3 + " " +
-                       pokerInput4 + " " + pokerInput5;
+                            pokerInput4 + " " + pokerInput5;
                     listPoker.set(i, strElement);
                 }
                 btnActiveStatus = currentStatus && btnActiveStatus;
@@ -228,7 +183,7 @@ public class HomeFragment extends Fragment {
             homeFragmentListener = (HomeFragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                + " must implement HomeFragmentListener");
+                    + " must implement HomeFragmentListener");
         }
     }
 
@@ -240,22 +195,23 @@ public class HomeFragment extends Fragment {
 
     public interface HomeFragmentListener {
         void activityChange(ArrayList<Poker> content);
+
         boolean isNetworkConnectionAvailable();
     }
 
-    private void setError(TextView tvTitle, EditText edText, TextView tvErrorMsg){
+    private void setError(TextView tvTitle, EditText edText, TextView tvErrorMsg) {
         listTitleErr.add(tvTitle);
         listMsgErr.add(tvErrorMsg);
         listInputErr.add(edText);
         Drawable error_icon = getResources().getDrawable(R.drawable.ic_error);
         error_icon.setBounds(0, 0, 40, 40);
-        edText.setCompoundDrawables(null,null, error_icon,null);
+        edText.setCompoundDrawables(null, null, error_icon, null);
         edText.getBackground().setColorFilter(getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
         edText.setTextColor(getResources().getColor(R.color.colorRed));
         tvTitle.setTextColor(getResources().getColor(R.color.colorRed));
     }
 
-    private void deleteOldError(){
+    private void deleteOldError() {
         while (listTitleErr.size() > 0) {
             listTitleErr.get(0).setTextColor(getResources().getColor(R.color.colorBlack));
             listTitleErr.remove(0);
@@ -266,7 +222,7 @@ public class HomeFragment extends Fragment {
         }
         while (listInputErr.size() > 0) {
             EditText edText = listInputErr.get(0);
-            edText.setCompoundDrawables(null,null, null,null);
+            edText.setCompoundDrawables(null, null, null, null);
             edText.getBackground().setColorFilter(getResources().getColor(R.color.colorGrey2), PorterDuff.Mode.SRC_ATOP);
             edText.setTextColor(getResources().getColor(R.color.colorBlack));
             listInputErr.remove(0);
@@ -296,7 +252,7 @@ public class HomeFragment extends Fragment {
                         if (!response.isNull("error")) {
                             try {
                                 JSONArray errorResponse = response.getJSONArray("error");
-                                for (int i= 0; i < errorResponse.length(); i++) {
+                                for (int i = 0; i < errorResponse.length(); i++) {
                                     JSONObject currentError = errorResponse.getJSONObject(i);
                                     int currentErrPoker = listPoker.indexOf(currentError.getString("card"));
                                     String currentErrPokerMsg = currentError.getString("msg");
@@ -305,7 +261,7 @@ public class HomeFragment extends Fragment {
                                     Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
                                     Matcher matcher = pattern.matcher(currentErrPokerMsg);
                                     if (matcher.find()) {
-                                        switch(matcher.group(0)) {
+                                        switch (matcher.group(0)) {
                                             case "1": {
                                                 TextView tvError = (TextView) thisChild.findViewById(R.id.poker_1_error_msg);
                                                 tvError.setText(currentErrPokerMsg);
@@ -347,6 +303,13 @@ public class HomeFragment extends Fragment {
                                                 break;
                                             }
                                         }
+                                    } else {
+                                        Toast toast = Toast.makeText(getActivity(), currentErrPokerMsg, Toast.LENGTH_LONG);
+                                        View view = toast.getView();
+                                        view.getBackground().setColorFilter(getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_IN);
+                                        TextView text = view.findViewById(android.R.id.message);
+                                        text.setTextColor(getResources().getColor(R.color.colorWhite));
+                                        toast.show();
                                     }
                                 }
                             } catch (JSONException e) {
@@ -356,7 +319,7 @@ public class HomeFragment extends Fragment {
                             ArrayList<Poker> pokerResults = new ArrayList<Poker>();
                             try {
                                 JSONArray resultResponse = response.getJSONArray("result");
-                                for (int i= 0; i < resultResponse.length(); i++) {
+                                for (int i = 0; i < resultResponse.length(); i++) {
                                     JSONObject currentPokerObj = resultResponse.getJSONObject(i);
                                     String currentPokerCard = currentPokerObj.getString("card");
                                     String currentPokerPosition = currentPokerObj.getString("hand");
@@ -383,7 +346,7 @@ public class HomeFragment extends Fragment {
                         //Failure Callback
                         Log.e("Volley", error.getMessage());
                         progressdialog.dismiss();
-                        AlertDialog.Builder builder =new AlertDialog.Builder(getContext());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("サーバーエラー");
                         builder.setMessage("後程、お試しください！");
                         builder.setNegativeButton("閉じる", new DialogInterface.OnClickListener() {

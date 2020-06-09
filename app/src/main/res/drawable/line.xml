@@ -3,16 +3,15 @@
     android:width="320dp"
     android:height="1dp"
     android:viewportWidth="320"
-    android:viewportHeight="1" >
+    android:viewportHeight="1">
 
     <group>
 
         <clip-path android:pathData="M0 0H320V1H0V0Z" />
 
         <path
-            android:pathData="M0 0V1H320V0"
             android:fillColor="#BDBDBD"
-            />
+            android:pathData="M0 0V1H320V0" />
 
     </group>
 
