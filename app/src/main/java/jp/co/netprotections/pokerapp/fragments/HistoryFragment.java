@@ -50,16 +50,18 @@ public class HistoryFragment extends Fragment {
         final LinearLayout historyContainer = (LinearLayout) view.findViewById(R.id.history_container);
         LayoutInflater layoutInflater =
                 (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        for (int i = 0; i < mParam.size(); i++) {
-            Poker childResult = mParam.get(i);
-            final View subView = layoutInflater.inflate(R.layout.shared_history_poker, null);
-            TextView pokerRole = (TextView) subView.findViewById(R.id.poker_role);
-            TextView pokerCard = (TextView) subView.findViewById(R.id.poker_card);
-            TextView checkedDate = (TextView) subView.findViewById(R.id.checked_date);
-            pokerCard.setText(childResult.getInputPoker());
-            pokerRole.setText(childResult.getPokerPosition());
-            checkedDate.setText(childResult.getCheckTime());
-            historyContainer.addView(subView);
+        if( mParam != null ) {
+            for (int i = 0; i < mParam.size(); i++) {
+                Poker childResult = mParam.get(i);
+                final View subView = layoutInflater.inflate(R.layout.shared_history_poker, null);
+                TextView pokerRole = (TextView) subView.findViewById(R.id.poker_role);
+                TextView pokerCard = (TextView) subView.findViewById(R.id.poker_card);
+                TextView checkedDate = (TextView) subView.findViewById(R.id.checked_date);
+                pokerCard.setText(childResult.getInputPoker());
+                pokerRole.setText(childResult.getPokerPosition());
+                checkedDate.setText(childResult.getCheckTime());
+                historyContainer.addView(subView);
+            }
         }
         return view;
     }
