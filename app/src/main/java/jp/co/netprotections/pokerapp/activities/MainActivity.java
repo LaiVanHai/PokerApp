@@ -3,6 +3,7 @@ package jp.co.netprotections.pokerapp.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -26,8 +27,11 @@ import jp.co.netprotections.pokerapp.fragments.HomeFragment;
 import jp.co.netprotections.pokerapp.model.Poker;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragmentListener{
+    private static final int SCREEN_ORIENTATION_PORTRAIT = 1;
     private HomeFragment fragmentHome = new HomeFragment();
+    private HistoryFragment historyFragment;
     BottomNavigationView bottomNavigation;
+    final String TAG_HISTORY_FRAGMENT = "HISTORY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +44,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         ft.add(R.id.content_frame, fragmentHome).commit();
     }
 
-    public void openFragment(Fragment fragment) {
+    public void openFragment(Fragment fragment, String tag) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.content_frame, fragment);
+        transaction.add(R.id.content_frame, fragment, tag);
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -55,12 +59,16 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 switch(item.getItemId()) {
                     case R.id.poker:
                         getSupportActionBar().setTitle(R.string.poker_title);
-                        getSupportFragmentManager().popBackStack();
+                        historyFragment = (HistoryFragment)getSupportFragmentManager().findFragmentByTag(TAG_HISTORY_FRAGMENT);
+                        if (historyFragment != null && historyFragment.isVisible()) {
+                            getSupportFragmentManager().popBackStack();
+                        }
                         return true;
                     case R.id.history:
                         getSupportActionBar().setTitle(R.string.history_title);
                         ArrayList<Poker> listCheckedPoker = MyStorage.loadHistories(getBaseContext());
-                        openFragment(HistoryFragment.newInstance(listCheckedPoker));
+                        historyFragment = HistoryFragment.newInstance(listCheckedPoker);
+                        openFragment(historyFragment, TAG_HISTORY_FRAGMENT);
                         return true;
                 }
                 return false;
@@ -68,8 +76,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         };
 
     @Override
-    public void activityChange(ArrayList<Poker> content) {
-        Intent intent = new Intent(this, ResultActivity.class);
+    public void activityChange(Context context, ArrayList<Poker> content) {
+        Intent intent = new Intent(context, ResultActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(ResultActivity.KEY_POKER_RESULTS, content);
         intent.putExtras(bundle);
@@ -104,6 +112,17 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             checkNetworkConnection();
             Log.d("Network","Not Connected");
             return false;
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();  // optional depending on your needs
+        MenuItem selectedMenu = bottomNavigation.getMenu().findItem(bottomNavigation.getSelectedItemId());
+        if (R.id.history == selectedMenu.getItemId()) {
+            bottomNavigation.setSelectedItemId(R.id.poker);
+            getSupportActionBar().setTitle(R.string.poker_title);
         }
     }
 }

@@ -29,11 +29,9 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
         getSupportActionBar().setTitle(R.string.result_title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -84,5 +82,19 @@ public class ResultActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        MenuItem selectedMenu = bottomNavigation.getMenu().findItem(bottomNavigation.getSelectedItemId());
+        if (R.id.poker == selectedMenu.getItemId()) {
+            finish();
+        } else {
+            bottomNavigation.setSelectedItemId(R.id.poker);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            openFragment(ResultFragment.newInstance(pokerResultList));
+        }
+        super.onBackPressed();  // optional depending on your needs
+    }
 
 }
