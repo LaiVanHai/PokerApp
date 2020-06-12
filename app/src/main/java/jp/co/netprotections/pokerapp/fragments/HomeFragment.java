@@ -195,7 +195,6 @@ public class HomeFragment extends Fragment {
 
     public interface HomeFragmentListener {
         void activityChange(Context context, ArrayList<Poker> content);
-
         boolean isNetworkConnectionAvailable();
     }
 
@@ -344,7 +343,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         //Failure Callback
-                        Log.e("Volley", error.getMessage());
+//                        Log.e("Volley", error.getMessage());
                         progressdialog.dismiss();
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("サーバーエラー");

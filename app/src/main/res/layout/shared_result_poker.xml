@@ -21,13 +21,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/result_title"
-            android:text="dasd"
             android:textAppearance="@style/result_title_style" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/result_subtitle"
-            android:text="1233123"
             android:textAppearance="@style/result_subtitle_style" />
     </LinearLayout>
 
