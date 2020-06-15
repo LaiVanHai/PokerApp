@@ -3,7 +3,6 @@ package jp.co.netprotections.pokerapp.fragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -41,7 +40,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jp.co.netprotections.pokerapp.R;
-import jp.co.netprotections.pokerapp.activities.ResultActivity;
 import jp.co.netprotections.pokerapp.common.MyStorage;
 import jp.co.netprotections.pokerapp.common.PokerSingleton;
 import jp.co.netprotections.pokerapp.model.Poker;
@@ -194,7 +192,7 @@ public class HomeFragment extends Fragment {
     }
 
     public interface HomeFragmentListener {
-        void activityChange(Context context, ArrayList<Poker> content);
+        void fragmentChange(ArrayList<Poker> content);
         boolean isNetworkConnectionAvailable();
     }
 
@@ -330,7 +328,7 @@ public class HomeFragment extends Fragment {
                                     MyStorage.addCheckedResult(getContext(), currentPoker);
                                 }
                                 if (homeFragmentListener != null) {
-                                    homeFragmentListener.activityChange(getActivity(), pokerResults);
+                                    homeFragmentListener.fragmentChange(pokerResults);
                                 }
 
                             } catch (JSONException e) {

@@ -29,14 +29,17 @@ import jp.co.netprotections.pokerapp.R;
 import jp.co.netprotections.pokerapp.common.MyStorage;
 import jp.co.netprotections.pokerapp.fragments.HistoryFragment;
 import jp.co.netprotections.pokerapp.fragments.HomeFragment;
+import jp.co.netprotections.pokerapp.fragments.ResultFragment;
 import jp.co.netprotections.pokerapp.model.Poker;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragmentListener{
     private static final int SCREEN_ORIENTATION_PORTRAIT = 1;
     private HomeFragment fragmentHome = new HomeFragment();
     private HistoryFragment historyFragment;
+    private ResultFragment resultFragment;
     BottomNavigationView bottomNavigation;
     final String TAG_HISTORY_FRAGMENT = "HISTORY";
+    final String TAG_RESULT_FRAGMENT = "RESULT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,14 +66,23 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()) {
                     case R.id.poker:
-                        getSupportActionBar().setTitle(R.string.poker_title);
                         historyFragment = (HistoryFragment)getSupportFragmentManager().findFragmentByTag(TAG_HISTORY_FRAGMENT);
                         if (historyFragment != null && historyFragment.isVisible()) {
                             getSupportFragmentManager().popBackStack();
                         }
+                        resultFragment = (ResultFragment) getSupportFragmentManager().findFragmentByTag(TAG_RESULT_FRAGMENT);
+                        if (resultFragment != null && resultFragment.isVisible()) {
+                            getSupportActionBar().setTitle(R.string.result_title);
+                            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                            getSupportActionBar().setHomeButtonEnabled(true);
+                        } else {
+                            getSupportActionBar().setTitle(R.string.poker_title);
+                        }
                         return true;
                     case R.id.history:
                         getSupportActionBar().setTitle(R.string.history_title);
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                        getSupportActionBar().setHomeButtonEnabled(false);
                         ArrayList<Poker> listCheckedPoker = MyStorage.loadHistories(getBaseContext());
                         historyFragment = HistoryFragment.newInstance(listCheckedPoker);
                         openFragment(historyFragment, TAG_HISTORY_FRAGMENT);
@@ -81,12 +93,11 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         };
 
     @Override
-    public void activityChange(Context context, ArrayList<Poker> content) {
-        Intent intent = new Intent(context, ResultActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(ResultActivity.KEY_POKER_RESULTS, content);
-        intent.putExtras(bundle);
-        startActivity(intent);
+    public void fragmentChange(ArrayList<Poker> content) {
+        getSupportActionBar().setTitle(R.string.result_title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        openFragment(ResultFragment.newInstance(content), TAG_RESULT_FRAGMENT);
     }
 
     public void checkNetworkConnection(){
@@ -129,6 +140,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             bottomNavigation.setSelectedItemId(R.id.poker);
             getSupportActionBar().setTitle(R.string.poker_title);
         }
+        resultFragment = (ResultFragment) getSupportFragmentManager().findFragmentByTag(TAG_RESULT_FRAGMENT);
+        if (resultFragment != null && resultFragment.isVisible()) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(false);
+            getSupportFragmentManager().popBackStack();
+        }
     }
 
     @Override
@@ -155,5 +172,16 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getSupportFragmentManager().popBackStack();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
