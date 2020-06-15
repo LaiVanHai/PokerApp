@@ -15,7 +15,7 @@
         <!-- TODO: Update blank fragment layout -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="8dp"
+            android:layout_height="@dimen/shadow_height"
             android:background="@drawable/shadow" />
 
         <LinearLayout

@@ -15,7 +15,7 @@
         <!-- TODO: Update blank fragment layout -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="8dp"
+            android:layout_height="@dimen/shadow_height"
             android:background="@drawable/shadow" />
 
         <TextView
@@ -36,8 +36,8 @@
             android:id="@+id/input_poker_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="21dp"
-            android:layout_marginLeft="21dp"
+            android:layout_marginStart="@dimen/activity_margin_left"
+            android:layout_marginLeft="@dimen/activity_margin_left"
             android:layout_marginTop="28dp"
             android:text="@string/input_title"
             android:textAppearance="@style/title_style"
@@ -54,8 +54,8 @@
             style="@style/material_button_custom_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="@dimen/activity_margin_left"
+            android:layout_marginLeft="@dimen/activity_margin_left"
             android:layout_marginBottom="96dp"
             android:text="@string/result"
             android:textAppearance="@style/label_text_style"

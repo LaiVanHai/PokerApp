@@ -15,8 +15,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="@dimen/activity_margin_left"
+            android:layout_marginLeft="@dimen/activity_margin_left"
             android:layout_marginTop="32dp"
             android:textAppearance="@style/result_title_style"
             android:textStyle="bold" />
@@ -28,8 +28,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="34dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp" />
+            android:layout_marginEnd="@dimen/activity_margin_right"
+            android:layout_marginRight="@dimen/activity_margin_right" />
     </RelativeLayout>
 
     <TextView
@@ -37,8 +37,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/group"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="@dimen/activity_margin_left"
+        android:layout_marginLeft="@dimen/activity_margin_left"
         android:layout_marginTop="5dp"
         android:textAppearance="@style/result_subtitle_style" />
 
