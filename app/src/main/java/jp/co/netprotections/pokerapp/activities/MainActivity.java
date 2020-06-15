@@ -102,9 +102,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
     public void checkNetworkConnection(){
         AlertDialog.Builder builder =new AlertDialog.Builder(this);
-        builder.setTitle("No internet Connection");
-        builder.setMessage("Please turn on internet connection to continue");
-        builder.setNegativeButton("close", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.no_internet_title);
+        builder.setMessage(R.string.no_internet_content);
+        builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
