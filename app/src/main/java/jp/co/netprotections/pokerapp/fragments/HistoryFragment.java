@@ -13,20 +13,20 @@ import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 
 import jp.co.netprotections.pokerapp.R;
-import jp.co.netprotections.pokerapp.model.Poker;
+import jp.co.netprotections.pokerapp.model.PokerCheckHistory;
 
 
 public class HistoryFragment extends Fragment {
     private static final String ARG_PARAM = "param";
 
     // TODO: Rename and change types of parameters
-    private ArrayList<Poker> mParam;
+    private ArrayList<PokerCheckHistory> mParam;
 
     public HistoryFragment() {
         // Required empty public constructor
     }
 
-    public static HistoryFragment newInstance(ArrayList<Poker> params) {
+    public static HistoryFragment newInstance(ArrayList<PokerCheckHistory> params) {
         HistoryFragment fragment = new HistoryFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_PARAM, params);
@@ -52,14 +52,14 @@ public class HistoryFragment extends Fragment {
                 (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if( mParam != null ) {
             for (int i = 0; i < mParam.size(); i++) {
-                Poker childResult = mParam.get(i);
+                PokerCheckHistory childResult = mParam.get(i);
                 final View subView = layoutInflater.inflate(R.layout.shared_history_poker, null);
                 TextView pokerRole = (TextView) subView.findViewById(R.id.poker_role);
                 TextView pokerCard = (TextView) subView.findViewById(R.id.poker_card);
                 TextView checkedDate = (TextView) subView.findViewById(R.id.checked_date);
                 pokerCard.setText(childResult.getInputPoker());
                 pokerRole.setText(childResult.getPokerPosition());
-                checkedDate.setText(childResult.getCheckTime());
+                checkedDate.setText(childResult.getCheckedTime());
                 historyContainer.addView(subView);
             }
         }

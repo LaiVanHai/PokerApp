@@ -18,28 +18,36 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import jp.co.netprotections.pokerapp.R;
-import jp.co.netprotections.pokerapp.common.PokerSingleton;
-import jp.co.netprotections.pokerapp.model.Poker;
+import jp.co.netprotections.pokerapp.common.MyStorage;
+import jp.co.netprotections.pokerapp.model.PokerCheckHistory;
+import jp.co.netprotections.pokerapp.model.PokerResponse;
+import jp.co.netprotections.pokerapp.services.PokerService;
 
 public class ResultFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM = "param";
     // TODO: Rename and change types of parameters
-    private ArrayList<Poker> mParam;
+    private PokerResponse mParam;
 
     public ResultFragment() {
         // Required empty public constructor
     }
 
     // TODO: Rename and change types and number of parameters
-    public static ResultFragment newInstance(ArrayList<Poker> params) {
+    public static ResultFragment newInstance(PokerResponse params) {
         ResultFragment fragment = new ResultFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, params);
+        args.putParcelable(ARG_PARAM, params);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,7 +56,7 @@ public class ResultFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam = getArguments().getParcelableArrayList(ARG_PARAM);
+            mParam = getArguments().getParcelable(ARG_PARAM);
         }
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
@@ -69,34 +77,39 @@ public class ResultFragment extends Fragment {
         LayoutInflater layoutInflater =
                 (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         String url = getString(R.string.get_img_url);
-        for (int i = 0; i < mParam.size(); i++) {
-            Poker childResult = mParam.get(i);
+        List<PokerResponse.Result> results = mParam.getResults();
+        for (int i = 0; i < results.size(); i++) {
+            PokerResponse.Result childResult = results.get(i);
             final View subView = layoutInflater.inflate(R.layout.shared_result_poker, null);
             TextView title = (TextView) subView.findViewById(R.id.result_title);
             TextView subtitle = (TextView) subView.findViewById(R.id.result_subtitle);
-            if (childResult.isStrongPoker()) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy/MM/dd HH:mm", Locale.getDefault());
+            String currentDateandTime = simpleDateFormat.format(new Date());
+            String card = childResult.getCard();
+            String hand = childResult.getHand();
+            boolean isBest = childResult.isBest();
+            PokerCheckHistory currentPoker = new PokerCheckHistory(card, hand, currentDateandTime);
+            MyStorage.addCheckedResult(getContext(), currentPoker);
+            if (isBest) {
                 Drawable error_icon = getResources().getDrawable(R.drawable.ic_check_circle_blue_24dp);
                 error_icon.setBounds(0, 0, 40, 40);
                 title.setCompoundDrawables(null, null, error_icon, null);
             }
             final ImageView imageView = (ImageView) subView.findViewById(R.id.result_img);
-            title.setText(childResult.getInputPoker());
-            subtitle.setText(childResult.getPokerPosition());
-            ImageRequest request = new ImageRequest(url,
-                    new Response.Listener<Bitmap>() {
-                        @Override
-                        public void onResponse(Bitmap bitmap) {
-                            imageView.setImageBitmap(bitmap);
-                            resultContainer.addView(subView);
-                        }
-                    }, 0, 0, null,
-                    new Response.ErrorListener() {
-                        public void onErrorResponse(VolleyError error) {
-                            imageView.setImageResource(R.drawable.ic_notifications);
-                            resultContainer.addView(subView);
-                        }
-                    });
-            PokerSingleton.getInstance(getContext()).getRequestQueue().add(request);
+            title.setText(card);
+            subtitle.setText(hand);
+            PokerService.getImage(getContext(), new PokerService.GetImageCallback(){
+                @Override
+                public void onSuccessResponse(Bitmap bitmap) {
+                    if (bitmap != null) {
+                        imageView.setImageBitmap(bitmap);
+                        resultContainer.addView(subView);
+                    } else {
+                        imageView.setImageResource(R.drawable.ic_notifications);
+                        resultContainer.addView(subView);
+                    }
+                }
+            });
         }
         return view;
     }

@@ -2,13 +2,7 @@ package jp.co.netprotections.pokerapp.activities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,21 +10,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
-
 import jp.co.netprotections.pokerapp.R;
 import jp.co.netprotections.pokerapp.common.MyStorage;
 import jp.co.netprotections.pokerapp.fragments.HistoryFragment;
 import jp.co.netprotections.pokerapp.fragments.HomeFragment;
 import jp.co.netprotections.pokerapp.fragments.ResultFragment;
-import jp.co.netprotections.pokerapp.model.Poker;
+import jp.co.netprotections.pokerapp.model.PokerResponse;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragmentListener{
     private static final int SCREEN_ORIENTATION_PORTRAIT = 1;
@@ -72,19 +63,14 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         }
                         resultFragment = (ResultFragment) getSupportFragmentManager().findFragmentByTag(TAG_RESULT_FRAGMENT);
                         if (resultFragment != null && resultFragment.isVisible()) {
-                            getSupportActionBar().setTitle(R.string.result_title);
-                            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                            getSupportActionBar().setHomeButtonEnabled(true);
+                            setToolbar(getResources().getString(R.string.result_title), true);
                         } else {
                             getSupportActionBar().setTitle(R.string.poker_title);
                         }
                         return true;
                     case R.id.history:
-                        getSupportActionBar().setTitle(R.string.history_title);
-                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                        getSupportActionBar().setHomeButtonEnabled(false);
-                        ArrayList<Poker> listCheckedPoker = MyStorage.loadHistories(getBaseContext());
-                        historyFragment = HistoryFragment.newInstance(listCheckedPoker);
+                        setToolbar(getResources().getString(R.string.history_title), false);
+                        historyFragment = HistoryFragment.newInstance(MyStorage.loadHistories(getBaseContext()));
                         openFragment(historyFragment, TAG_HISTORY_FRAGMENT);
                         return true;
                 }
@@ -93,42 +79,15 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         };
 
     @Override
-    public void fragmentChange(ArrayList<Poker> content) {
-        getSupportActionBar().setTitle(R.string.result_title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+    public void fragmentChange(PokerResponse content) {
+        setToolbar(getResources().getString(R.string.result_title), true);
         openFragment(ResultFragment.newInstance(content), TAG_RESULT_FRAGMENT);
     }
 
-    public void checkNetworkConnection(){
-        AlertDialog.Builder builder =new AlertDialog.Builder(this);
-        builder.setTitle(R.string.no_internet_title);
-        builder.setMessage(R.string.no_internet_content);
-        builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
-    @Override
-    public boolean isNetworkConnectionAvailable(){
-        ConnectivityManager cm =
-            (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null && activeNetwork.isConnected();
-        if(isConnected) {
-            Log.d("Network", "Connected");
-            return true;
-        }
-        else{
-            checkNetworkConnection();
-            Log.d("Network","Not Connected");
-            return false;
-        }
+    private void setToolbar(String title, boolean backIsEnable) {
+        getSupportActionBar().setTitle(title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(backIsEnable);
+        getSupportActionBar().setHomeButtonEnabled(backIsEnable);
     }
 
     @Override

@@ -23,26 +23,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.Gson;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
 import jp.co.netprotections.pokerapp.R;
-import jp.co.netprotections.pokerapp.common.MyStorage;
-import jp.co.netprotections.pokerapp.common.PokerSingleton;
-import jp.co.netprotections.pokerapp.model.Poker;
+import jp.co.netprotections.pokerapp.common.CheckNetwork;
+import jp.co.netprotections.pokerapp.model.PokerRequest;
+import jp.co.netprotections.pokerapp.model.PokerResponse;
+import jp.co.netprotections.pokerapp.services.PokerService;
 
 public class HomeFragment extends Fragment {
     private Button btnResult;
@@ -53,7 +45,7 @@ public class HomeFragment extends Fragment {
     private EditText edtPoker4;
     private EditText edtPoker5;
     private LinearLayout container;
-    private ArrayList<String> listPoker = new ArrayList<String>();
+    private PokerRequest listPokerRequest = new PokerRequest(new ArrayList<String>());
     private ArrayList<TextView> listTitleErr = new ArrayList<TextView>();
     private ArrayList<TextView> listMsgErr = new ArrayList<TextView>();
     private ArrayList<EditText> listInputErr = new ArrayList<EditText>();
@@ -89,7 +81,7 @@ public class HomeFragment extends Fragment {
         View subView = layoutInflater.inflate(R.layout.shared_input_poker, null);
         container.addView(subView);
         CheckInput(subView);
-        listPoker.add("");
+        listPokerRequest.addCard("");
 
         tvAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,9 +93,9 @@ public class HomeFragment extends Fragment {
                 View beforeView = container.getChildAt(childCount - 1);
                 View line = beforeView.findViewById(R.id.line);
                 line.setVisibility(View.VISIBLE);
-                listPoker.add("");
+                listPokerRequest.addCard("");
                 container.addView(view);
-                Toast.makeText(getContext(), "追加した", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.added_notice, Toast.LENGTH_LONG).show();
                 CheckInput(view);
             }
         });
@@ -111,8 +103,8 @@ public class HomeFragment extends Fragment {
         btnResult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteOldError();
-                if (homeFragmentListener.isNetworkConnectionAvailable()) {
+                if(CheckNetwork.isNetworkConnectionAvailable(getActivity())) {
+                    deleteOldError();
                     sendRequestCheck();
                 }
             }
@@ -121,16 +113,11 @@ public class HomeFragment extends Fragment {
 
     private void CheckInput(View view) {
         btnResult.setEnabled(false);
-        edtPoker1 = (EditText) view.findViewById(R.id.input_poker_1);
-        edtPoker2 = (EditText) view.findViewById(R.id.input_poker_2);
-        edtPoker3 = (EditText) view.findViewById(R.id.input_poker_3);
-        edtPoker4 = (EditText) view.findViewById(R.id.input_poker_4);
-        edtPoker5 = (EditText) view.findViewById(R.id.input_poker_5);
-        edtPoker1.addTextChangedListener(textWatcher);
-        edtPoker2.addTextChangedListener(textWatcher);
-        edtPoker3.addTextChangedListener(textWatcher);
-        edtPoker4.addTextChangedListener(textWatcher);
-        edtPoker5.addTextChangedListener(textWatcher);
+        ((EditText) view.findViewById(R.id.input_poker_1)).addTextChangedListener(textWatcher);
+        ((EditText) view.findViewById(R.id.input_poker_2)).addTextChangedListener(textWatcher);
+        ((EditText) view.findViewById(R.id.input_poker_3)).addTextChangedListener(textWatcher);
+        ((EditText) view.findViewById(R.id.input_poker_4)).addTextChangedListener(textWatcher);
+        ((EditText) view.findViewById(R.id.input_poker_5)).addTextChangedListener(textWatcher);
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -147,22 +134,17 @@ public class HomeFragment extends Fragment {
             int childCount = container.getChildCount();
             for (int i = 0; i < childCount; i++) {
                 View thisChild = container.getChildAt(i);
-                edtPoker1 = (EditText) thisChild.findViewById(R.id.input_poker_1);
-                edtPoker2 = (EditText) thisChild.findViewById(R.id.input_poker_2);
-                edtPoker3 = (EditText) thisChild.findViewById(R.id.input_poker_3);
-                edtPoker4 = (EditText) thisChild.findViewById(R.id.input_poker_4);
-                edtPoker5 = (EditText) thisChild.findViewById(R.id.input_poker_5);
-                String pokerInput1 = edtPoker1.getText().toString().trim();
-                String pokerInput2 = edtPoker2.getText().toString().trim();
-                String pokerInput3 = edtPoker3.getText().toString().trim();
-                String pokerInput4 = edtPoker4.getText().toString().trim();
-                String pokerInput5 = edtPoker5.getText().toString().trim();
+                String pokerInput1 = ((EditText) thisChild.findViewById(R.id.input_poker_1)).getText().toString().trim();
+                String pokerInput2 = ((EditText) thisChild.findViewById(R.id.input_poker_2)).getText().toString().trim();
+                String pokerInput3 = ((EditText) thisChild.findViewById(R.id.input_poker_3)).getText().toString().trim();
+                String pokerInput4 = ((EditText) thisChild.findViewById(R.id.input_poker_4)).getText().toString().trim();
+                String pokerInput5 = ((EditText) thisChild.findViewById(R.id.input_poker_5)).getText().toString().trim();
                 currentStatus = !pokerInput1.isEmpty() && !pokerInput2.isEmpty() &&
-                        !pokerInput3.isEmpty() && !pokerInput4.isEmpty() && !pokerInput5.isEmpty();
+                    !pokerInput3.isEmpty() && !pokerInput4.isEmpty() && !pokerInput5.isEmpty();
                 if (currentStatus) {
                     strElement = pokerInput1 + " " + pokerInput2 + " " + pokerInput3 + " " +
                             pokerInput4 + " " + pokerInput5;
-                    listPoker.set(i, strElement);
+                    listPokerRequest.changeCard(i, strElement);
                 }
                 btnActiveStatus = currentStatus && btnActiveStatus;
             }
@@ -173,6 +155,7 @@ public class HomeFragment extends Fragment {
         public void afterTextChanged(Editable s) {
         }
     };
+
 
     @Override
     public void onAttach(Context context) {
@@ -192,11 +175,14 @@ public class HomeFragment extends Fragment {
     }
 
     public interface HomeFragmentListener {
-        void fragmentChange(ArrayList<Poker> content);
-        boolean isNetworkConnectionAvailable();
+        void fragmentChange(PokerResponse content);
     }
 
-    private void setError(TextView tvTitle, EditText edText, TextView tvErrorMsg) {
+    private void setError(View currentView, int errorMsgID, int pokerTitleID, int inputPokerID, String errMsg) {
+        TextView tvErrorMsg = (TextView) currentView.findViewById(errorMsgID);
+        tvErrorMsg.setText(errMsg);
+        TextView tvTitle = (TextView) currentView.findViewById(pokerTitleID);
+        EditText edText = (EditText) currentView.findViewById(inputPokerID);
         listTitleErr.add(tvTitle);
         listMsgErr.add(tvErrorMsg);
         listInputErr.add(edText);
@@ -206,6 +192,31 @@ public class HomeFragment extends Fragment {
         edText.getBackground().setColorFilter(getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
         edText.setTextColor(getResources().getColor(R.color.colorRed));
         tvTitle.setTextColor(getResources().getColor(R.color.colorRed));
+    }
+
+    private void selectPokerError(View view, int errorCardNo, String errPokerMsg) {
+        switch (errorCardNo) {
+            case 1: {
+                setError(view, R.id.poker_1_error_msg, R.id.input_poker_1_title, R.id.input_poker_1, errPokerMsg);
+                break;
+            }
+            case 2: {
+                setError(view, R.id.poker_2_error_msg, R.id.input_poker_2_title, R.id.input_poker_2, errPokerMsg);
+                break;
+            }
+            case 3: {
+                setError(view, R.id.poker_3_error_msg, R.id.input_poker_3_title, R.id.input_poker_3, errPokerMsg);
+                break;
+            }
+            case 4: {
+                setError(view, R.id.poker_4_error_msg, R.id.input_poker_4_title, R.id.input_poker_4, errPokerMsg);
+                break;
+            }
+            case 5: {
+                setError(view, R.id.poker_5_error_msg, R.id.input_poker_5_title, R.id.input_poker_5, errPokerMsg);
+                break;
+            }
+        }
     }
 
     private void deleteOldError() {
@@ -230,134 +241,57 @@ public class HomeFragment extends Fragment {
         final ProgressDialog progressdialog = new ProgressDialog(getContext());
         progressdialog.setMessage(getString(R.string.wating_response));
         Log.e("Home Activity", "Request Start");
-        String url = getString(R.string.check_poker_url);
-        JSONObject postparams = new JSONObject();
-        JSONArray jsArrayPoker = new JSONArray(listPoker);
-        try {
-            postparams.put("cards", jsArrayPoker);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, url, postparams,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        progressdialog.dismiss();
-                        //Success Callback
-                        Log.e("Home Activity", "JsonObjectRequest onResponse: " + response.toString());
-                        if (!response.isNull("error")) {
-                            try {
-                                JSONArray errorResponse = response.getJSONArray("error");
-                                for (int i = 0; i < errorResponse.length(); i++) {
-                                    JSONObject currentError = errorResponse.getJSONObject(i);
-                                    int currentErrPoker = listPoker.indexOf(currentError.getString("card"));
-                                    String currentErrPokerMsg = currentError.getString("msg");
-                                    View thisChild = container.getChildAt(currentErrPoker);
-                                    final String regex = "[1-9]+";
-                                    Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
-                                    Matcher matcher = pattern.matcher(currentErrPokerMsg);
-                                    if (matcher.find()) {
-                                        switch (matcher.group(0)) {
-                                            case "1": {
-                                                TextView tvError = (TextView) thisChild.findViewById(R.id.poker_1_error_msg);
-                                                tvError.setText(currentErrPokerMsg);
-                                                TextView tvInputPoker1 = (TextView) thisChild.findViewById(R.id.input_poker_1_title);
-                                                edtPoker1 = (EditText) thisChild.findViewById(R.id.input_poker_1);
-                                                setError(tvInputPoker1, edtPoker1, tvError);
-                                                break;
-                                            }
-                                            case "2": {
-                                                TextView tvError = (TextView) thisChild.findViewById(R.id.poker_2_error_msg);
-                                                tvError.setText(currentErrPokerMsg);
-                                                TextView tvInputPoker2 = (TextView) thisChild.findViewById(R.id.input_poker_2_title);
-                                                edtPoker2 = (EditText) thisChild.findViewById(R.id.input_poker_2);
-                                                setError(tvInputPoker2, edtPoker2, tvError);
-                                                break;
-                                            }
-                                            case "3": {
-                                                TextView tvError = (TextView) thisChild.findViewById(R.id.poker_3_error_msg);
-                                                tvError.setText(currentErrPokerMsg);
-                                                TextView tvInputPoker3 = (TextView) thisChild.findViewById(R.id.input_poker_3_title);
-                                                edtPoker3 = (EditText) thisChild.findViewById(R.id.input_poker_3);
-                                                setError(tvInputPoker3, edtPoker3, tvError);
-                                                break;
-                                            }
-                                            case "4": {
-                                                TextView tvError = (TextView) thisChild.findViewById(R.id.poker_4_error_msg);
-                                                tvError.setText(currentErrPokerMsg);
-                                                TextView tvInputPoker4 = (TextView) thisChild.findViewById(R.id.input_poker_4_title);
-                                                edtPoker4 = (EditText) thisChild.findViewById(R.id.input_poker_4);
-                                                setError(tvInputPoker4, edtPoker4, tvError);
-                                                break;
-                                            }
-                                            case "5": {
-                                                TextView tvError = (TextView) thisChild.findViewById(R.id.poker_5_error_msg);
-                                                tvError.setText(currentErrPokerMsg);
-                                                TextView tvInputPoker5 = (TextView) thisChild.findViewById(R.id.input_poker_5_title);
-                                                edtPoker5 = (EditText) thisChild.findViewById(R.id.input_poker_5);
-                                                setError(tvInputPoker5, edtPoker5, tvError);
-                                                break;
-                                            }
-                                        }
-                                    } else {
-                                        Toast toast = Toast.makeText(getActivity(), currentErrPokerMsg, Toast.LENGTH_LONG);
-                                        View view = toast.getView();
-                                        view.getBackground().setColorFilter(getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_IN);
-                                        TextView text = view.findViewById(android.R.id.message);
-                                        text.setTextColor(getResources().getColor(R.color.colorWhite));
-                                        toast.show();
-                                    }
+        progressdialog.show();
+        PokerService.getResponseCheck(listPokerRequest, getContext(), new PokerService.CheckPokerCallback() {
+            @Override
+            public void onSuccessResponse(JSONObject response) {
+                if (response != null) {
+                    PokerResponse pokerResponse = new Gson().fromJson(response.toString(), PokerResponse.class);
+                    progressdialog.dismiss();
+                    if (pokerResponse.getErrors() == null) {
+                        if (homeFragmentListener != null) {
+                            homeFragmentListener.fragmentChange(pokerResponse);
+                        }
+                    } else {
+                        List<PokerResponse.Error> errorResponse = pokerResponse.getErrors();
+                        for (int i=0; i<errorResponse.size(); i++) {
+                            PokerResponse.Error currentError = errorResponse.get(i);
+                            int currentErrPoker = listPokerRequest.getCards().indexOf(currentError.getCard());
+                            String currentErrPokerMsg = currentError.getMsg();
+                            View thisChild = container.getChildAt(currentErrPoker);
+                            int errorCardNo = PokerService.getCardNo(currentError.getMsg());
+                            if (errorCardNo > 0) {
+                                selectPokerError(thisChild, errorCardNo, currentErrPokerMsg);
+                            } else {
+                                Toast toast = Toast.makeText(getActivity(), currentErrPokerMsg, Toast.LENGTH_LONG);
+                                View view = toast.getView();
+                                view.getBackground().setColorFilter(getResources().getColor(R.color.colorRed), PorterDuff.Mode.SRC_IN);
+                                TextView text = view.findViewById(android.R.id.message);
+                                text.setTextColor(getResources().getColor(R.color.colorWhite));
+                                toast.show();
+                                ArrayList<Integer> duplicationCardList = PokerService.getDuplicationCardNo(currentError.getCard());
+                                for (int j=0; j<duplicationCardList.size(); j++) {
+                                    selectPokerError(thisChild, duplicationCardList.get(j), currentErrPokerMsg);
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            ArrayList<Poker> pokerResults = new ArrayList<Poker>();
-                            try {
-                                JSONArray resultResponse = response.getJSONArray("result");
-                                for (int i = 0; i < resultResponse.length(); i++) {
-                                    JSONObject currentPokerObj = resultResponse.getJSONObject(i);
-                                    String currentPokerCard = currentPokerObj.getString("card");
-                                    String currentPokerPosition = currentPokerObj.getString("hand");
-                                    boolean currentPokerStrong = currentPokerObj.getBoolean("best");
-                                    SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd HH:mm", Locale.getDefault());
-                                    String currentDateandTime = sdf.format(new Date());
-                                    Poker currentPoker = new Poker(currentPokerCard, currentPokerPosition, currentPokerStrong, currentDateandTime);
-                                    pokerResults.add(currentPoker);
-                                    MyStorage.addCheckedResult(getContext(), currentPoker);
-                                }
-                                if (homeFragmentListener != null) {
-                                    homeFragmentListener.fragmentChange(pokerResults);
-                                }
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
                         }
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //Failure Callback
-//                        Log.e("Volley", error.getMessage());
-                        progressdialog.dismiss();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle("サーバーエラー");
-                        builder.setMessage("後程、お試しください！");
-                        builder.setNegativeButton("閉じる", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-                    }
-                });
-
-        PokerSingleton.getInstance(getContext()).getRequestQueue().add(jsonObjReq);
-        progressdialog.show();
+                } else {
+                    progressdialog.dismiss();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("サーバーエラー");
+                    builder.setMessage("後程、お試しください！");
+                    builder.setNegativeButton("閉じる", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+            }
+        });
     }
+
 }

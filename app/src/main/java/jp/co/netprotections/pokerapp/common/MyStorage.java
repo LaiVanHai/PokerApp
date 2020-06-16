@@ -9,14 +9,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jp.co.netprotections.pokerapp.model.Poker;
-
+import jp.co.netprotections.pokerapp.model.PokerCheckHistory;
 
 public class MyStorage {
     public static final String PREFS_NAME = "POKER_APP";
     public static final String CHECKED_POKER = "Checked_poker";
 
-    public static void storeToHistories(Context context, ArrayList<Poker> checkedList) {
+    public static void storeToHistories(Context context, ArrayList<PokerCheckHistory> checkedList) {
         // used for store arrayList in json format
         SharedPreferences settings;
         SharedPreferences.Editor editor;
@@ -28,7 +27,7 @@ public class MyStorage {
         editor.commit();
     }
 
-    public static ArrayList<Poker> loadHistories(Context context) {
+    public static ArrayList<PokerCheckHistory> loadHistories(Context context) {
         // used for retrieving arraylist from json formatted string
         SharedPreferences settings;
         List checkedList;
@@ -36,7 +35,7 @@ public class MyStorage {
         if (settings.contains(CHECKED_POKER)) {
             String jsonFavorites = settings.getString(CHECKED_POKER, null);
             Gson sExposeGson = new Gson();
-            Poker[] favoriteItems = sExposeGson.fromJson(jsonFavorites, Poker[].class);
+            PokerCheckHistory[] favoriteItems = sExposeGson.fromJson(jsonFavorites, PokerCheckHistory[].class);
             checkedList = Arrays.asList(favoriteItems);
             checkedList = new ArrayList(checkedList);
         } else
@@ -44,16 +43,16 @@ public class MyStorage {
         return (ArrayList) checkedList;
     }
 
-    public static void addCheckedResult(Context context, Poker checkedPoker) {
-        ArrayList<Poker> checkedList = loadHistories(context);
+    public static void addCheckedResult(Context context, PokerCheckHistory checkedPoker) {
+        ArrayList<PokerCheckHistory> checkedList = loadHistories(context);
         if (checkedList == null)
-            checkedList = new ArrayList<Poker>();
+            checkedList = new ArrayList<PokerCheckHistory>();
         checkedList.add(checkedPoker);
         storeToHistories(context, checkedList);
     }
 
-    public static void removeCheckedResult(Context context, Poker checkedPoker) {
-        ArrayList<Poker> checkedList = loadHistories(context);
+    public static void removeCheckedResult(Context context, PokerCheckHistory checkedPoker) {
+        ArrayList<PokerCheckHistory> checkedList = loadHistories(context);
         if (checkedList != null) {
             checkedList.remove(checkedPoker);
             storeToHistories(context, checkedList);

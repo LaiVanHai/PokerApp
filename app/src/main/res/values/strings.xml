@@ -22,5 +22,6 @@
     <string name="no_internet_title">インターネットがない</string>
     <string name="no_internet_content">インターネットに接続して、再実行お願いいたします！</string>
     <string name="close">閉じる</string>
+    <string name="added_notice">追加した</string>
 
 </resources>
