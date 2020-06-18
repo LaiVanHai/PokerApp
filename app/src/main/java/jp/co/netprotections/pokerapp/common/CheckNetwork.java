@@ -12,7 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import jp.co.netprotections.pokerapp.R;
 
 public class CheckNetwork {
-    public static void checkNetworkConnection(Activity curActivity){
+    public void checkNetworkConnection(Activity curActivity){
         AlertDialog.Builder builder = new AlertDialog.Builder(curActivity);
         builder.setTitle(R.string.no_internet_title);
         builder.setMessage(R.string.no_internet_content);
@@ -26,7 +26,7 @@ public class CheckNetwork {
         alertDialog.show();
     }
 
-    public static boolean isNetworkConnectionAvailable(Activity curActivity){
+    public boolean isNetworkConnectionAvailable(Activity curActivity){
         ConnectivityManager cm =
                 (ConnectivityManager) curActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();

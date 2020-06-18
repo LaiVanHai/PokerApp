@@ -14,14 +14,7 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
-
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -74,10 +67,15 @@ public class ResultFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_result, container, false);
         final LinearLayout resultContainer = (LinearLayout) view.findViewById(R.id.result_container);
+        createViewData(resultContainer);
+        return view;
+    }
+
+    private void createViewData(final LinearLayout container) {
         LayoutInflater layoutInflater =
                 (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        String url = getString(R.string.get_img_url);
         List<PokerResponse.Result> results = mParam.getResults();
+        MyStorage myStorage = new MyStorage();
         for (int i = 0; i < results.size(); i++) {
             PokerResponse.Result childResult = results.get(i);
             final View subView = layoutInflater.inflate(R.layout.shared_result_poker, null);
@@ -89,7 +87,7 @@ public class ResultFragment extends Fragment {
             String hand = childResult.getHand();
             boolean isBest = childResult.isBest();
             PokerCheckHistory currentPoker = new PokerCheckHistory(card, hand, currentDateandTime);
-            MyStorage.addCheckedResult(getContext(), currentPoker);
+            myStorage.addCheckedResult(getContext(), currentPoker);
             if (isBest) {
                 Drawable error_icon = getResources().getDrawable(R.drawable.ic_check_circle_blue_24dp);
                 error_icon.setBounds(0, 0, 40, 40);
@@ -103,14 +101,14 @@ public class ResultFragment extends Fragment {
                 public void onSuccessResponse(Bitmap bitmap) {
                     if (bitmap != null) {
                         imageView.setImageBitmap(bitmap);
-                        resultContainer.addView(subView);
+                        container.addView(subView);
                     } else {
                         imageView.setImageResource(R.drawable.ic_notifications);
-                        resultContainer.addView(subView);
+                        container.addView(subView);
                     }
                 }
             });
         }
-        return view;
+        myStorage = null;
     }
 }
