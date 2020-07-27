@@ -24,9 +24,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
-
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,11 +37,6 @@ import jp.co.netprotections.pokerapp.services.PokerService;
 public class HomeFragment extends Fragment {
     private Button btnResult;
     private TextView tvAdd;
-    private EditText edtPoker1;
-    private EditText edtPoker2;
-    private EditText edtPoker3;
-    private EditText edtPoker4;
-    private EditText edtPoker5;
     private LinearLayout container;
     private PokerRequest listPokerRequest = new PokerRequest(new ArrayList<String>());
     private ArrayList<TextView> listTitleErr = new ArrayList<TextView>();
@@ -73,6 +66,10 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        createViewData();
+    }
+
+    private void createViewData() {
         btnResult = (Button) getView().findViewById(R.id.button_result);
         tvAdd = (TextView) getView().findViewById(R.id.add_poker);
         container = (LinearLayout) getView().findViewById(R.id.input_container);
@@ -103,9 +100,11 @@ public class HomeFragment extends Fragment {
         btnResult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(CheckNetwork.isNetworkConnectionAvailable(getActivity())) {
+                CheckNetwork checkNetwork = new CheckNetwork();
+                if(checkNetwork.isNetworkConnectionAvailable(getActivity())) {
                     deleteOldError();
                     sendRequestCheck();
+                    checkNetwork = null;
                 }
             }
         });

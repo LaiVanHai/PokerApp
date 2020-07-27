@@ -69,9 +69,11 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         }
                         return true;
                     case R.id.history:
+                        MyStorage myStorage = new MyStorage();
                         setToolbar(getResources().getString(R.string.history_title), false);
-                        historyFragment = HistoryFragment.newInstance(MyStorage.loadHistories(getBaseContext()));
+                        historyFragment = HistoryFragment.newInstance(myStorage.loadHistories(getBaseContext()));
                         openFragment(historyFragment, TAG_HISTORY_FRAGMENT);
+                        myStorage = null;
                         return true;
                 }
                 return false;

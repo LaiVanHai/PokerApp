@@ -15,7 +15,7 @@ public class MyStorage {
     public static final String PREFS_NAME = "POKER_APP";
     public static final String CHECKED_POKER = "Checked_poker";
 
-    public static void storeToHistories(Context context, ArrayList<PokerCheckHistory> checkedList) {
+    public void storeToHistories(Context context, ArrayList<PokerCheckHistory> checkedList) {
         // used for store arrayList in json format
         SharedPreferences settings;
         SharedPreferences.Editor editor;
@@ -27,7 +27,7 @@ public class MyStorage {
         editor.commit();
     }
 
-    public static ArrayList<PokerCheckHistory> loadHistories(Context context) {
+    public ArrayList<PokerCheckHistory> loadHistories(Context context) {
         // used for retrieving arraylist from json formatted string
         SharedPreferences settings;
         List checkedList;
@@ -43,7 +43,7 @@ public class MyStorage {
         return (ArrayList) checkedList;
     }
 
-    public static void addCheckedResult(Context context, PokerCheckHistory checkedPoker) {
+    public void addCheckedResult(Context context, PokerCheckHistory checkedPoker) {
         ArrayList<PokerCheckHistory> checkedList = loadHistories(context);
         if (checkedList == null)
             checkedList = new ArrayList<PokerCheckHistory>();
@@ -51,7 +51,7 @@ public class MyStorage {
         storeToHistories(context, checkedList);
     }
 
-    public static void removeCheckedResult(Context context, PokerCheckHistory checkedPoker) {
+    public void removeCheckedResult(Context context, PokerCheckHistory checkedPoker) {
         ArrayList<PokerCheckHistory> checkedList = loadHistories(context);
         if (checkedList != null) {
             checkedList.remove(checkedPoker);
@@ -59,7 +59,7 @@ public class MyStorage {
         }
     }
 
-    public static boolean removeAllCheckedResult(Context context) {
+    public boolean removeAllCheckedResult(Context context) {
         SharedPreferences settings;
         SharedPreferences.Editor editor;
         settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);

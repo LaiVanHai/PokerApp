@@ -48,6 +48,12 @@ public class HistoryFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         final LinearLayout historyContainer = (LinearLayout) view.findViewById(R.id.history_container);
+        createViewData(historyContainer);
+
+        return view;
+    }
+
+    private void createViewData(LinearLayout container) {
         LayoutInflater layoutInflater =
                 (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if( mParam != null ) {
@@ -60,9 +66,8 @@ public class HistoryFragment extends Fragment {
                 pokerCard.setText(childResult.getInputPoker());
                 pokerRole.setText(childResult.getPokerPosition());
                 checkedDate.setText(childResult.getCheckedTime());
-                historyContainer.addView(subView);
+                container.addView(subView);
             }
         }
-        return view;
     }
 }
